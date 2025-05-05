@@ -1,0 +1,5 @@
+datasets==2.20.0
+qdrant-client==1.14.2
+tqdm==4.67.1
+pandas==2.2.3
+huggingface_hub==0.30.2
