@@ -1,5 +1,4 @@
-
-# Bechmarkign Qdrant on Cohere Dataset
+# Benchmarking Qdrant on Cohere Dataset
 
 Cohere datasets used:
 
@@ -75,8 +74,8 @@ client.create_collection(
 ## Generate reference data
 
 In order to obtain ground truth for the benchmark, we need to run exact search on the dataset.
-This might take a while or require a big machine with enough RAM. So we pre-generate reference data
-and share it as a part of testing repository.
+This might take a while or require a large machine with enough RAM. So we pre-generate reference data
+and share it as part of the testing repository.
 
 
 If you want to generate your own, you can do so with the following command:
@@ -89,7 +88,7 @@ python upload/exact_search.py
 ## Uploading data
 
 
-Run qdrant on server:
+Run Qdrant on server:
 
 ```bash
 # Make sure local directory is mounted to local SSD
@@ -104,7 +103,7 @@ export QDRANT_API_KEY=
 python upload/prepare_data.py
 ```
 
-Upload will take about 2.5 hours, this includes downloading data from Hugging Face,
+Upload will take about 2.5 hours, including downloading data from Hugging Face,
 converting it to Qdrant format and uploading to Qdrant.
 
 Total upload and indexing time is expected to be around 5 hours.
@@ -112,9 +111,9 @@ Total upload and indexing time is expected to be around 5 hours.
 
 ## Running search
 
-At this point we would like to re-use existing infrastructure for running search - [vector-db-benchmark](https://github.com/qdrant/vector-db-benchmark).
+At this point, we would like to reuse existing infrastructure for running search - [vector-db-benchmark](https://github.com/qdrant/vector-db-benchmark).
 
-Scripts from this project can work with a compatible format as `upload/exact_search.py` produces, and it is already contains all necessary parameters.
+Scripts from this project can work with a compatible format as `upload/exact_search.py` produces, and it already contains all necessary parameters.
 
 ### Setup
 
@@ -130,7 +129,7 @@ pip install poetry && poetry install
 
 ### Clearing the cache
 
-To avoid system disk cache contamination with benchmark-specific data, we clear disk cache for the whole system, and only after than launch Qdrant.
+To avoid system disk cache contamination with benchmark-specific data, we clear disk cache for the whole system, and only after that launch Qdrant.
 
 ```bash
 sudo bash -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
@@ -138,15 +137,15 @@ sudo bash -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
 docker run --rm -it --network=host -v $(pwd)/qdrant-storage:/qdrant/storage qdrant/qdrant:v1.14.0
 ```
 
-### Hearing-up Qdrant
+### Warming up Qdrant
 
-To simulate production environment, we will pre-run random queries through the collection:
+To simulate a production environment, we will pre-run random queries through the collection:
 
 ```bash
 docker run --rm -it --network=host qdrant/bfb:dev ./bfb -n 300000 -d 768 --skip-create --skip-upload --skip-wait-index --quantization-rescore=true --search --search-hnsw-ef=256 --search-limit 100 -p 100 -t 10
 ```
 
-Random queries guarantee that there are no correlation with real benchmark queries.
+Random queries guarantee that there is no correlation with real benchmark queries.
 
 
 ### Running the benchmark
@@ -156,7 +155,7 @@ Random queries guarantee that there are no correlation with real benchmark queri
 python3 -m run --engines qdrant-rescore-only --datasets cohere-wiki-50m-test-only --skip-upload
 ```
 
-It will download the reference queries, run the benchmark and save report to `results/` directory.
+It will download the reference queries, run the benchmark, and save the report to the `results/` directory.
 
 
 ## Results
