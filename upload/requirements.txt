@@ -1,4 +1,4 @@
-datasets==2.20.0
+datasets==5.0.1
 qdrant-client==1.14.2
 tqdm==4.67.1
 pandas==2.2.3
